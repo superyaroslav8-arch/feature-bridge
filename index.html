@@ -3,52 +3,46 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Тех-нора — настройки и решения для всех устройств</title>
+  <title>Тех-нора — настройки и решения</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23000'/><text x='50' y='68' font-size='42' text-anchor='middle' font-family='Arial Black,sans-serif' font-weight='900' fill='%2300a2ff'>TN</text></svg>">
 </head>
 <body>
+  <div class="bg-glow"></div>
   <header>
     <div class="logo-row">
-      <div class="logo-mark" aria-label="Тех-нора">
-        <svg class="logo-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+      <div class="logo-mark">
+        <svg class="logo-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#4dc9ff"/>
-              <stop offset="50%" stop-color="#0088ff"/>
-              <stop offset="100%" stop-color="#0055cc"/>
+            <linearGradient id="tnGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#5ee7ff"/>
+              <stop offset="40%" stop-color="#1a8cff"/>
+              <stop offset="100%" stop-color="#0050d0"/>
             </linearGradient>
-            <filter id="glow">
-              <feGaussianBlur stdDeviation="2.5" result="b"/>
-              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+              <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
             </filter>
           </defs>
-          <!-- orbit rings -->
-          <ellipse class="orbit o1" cx="60" cy="60" rx="52" ry="20" fill="none" stroke="#00b4ff" stroke-width="2" opacity="0.7" transform="rotate(-25 60 60)"/>
-          <ellipse class="orbit o2" cx="60" cy="60" rx="52" ry="20" fill="none" stroke="#00d4ff" stroke-width="1.5" opacity="0.45" transform="rotate(35 60 60)"/>
-          <!-- TN monogram simplified -->
-          <g filter="url(#glow)" fill="url(#g)">
-            <!-- T bar -->
-            <path d="M22 28 h76 v14 H68 v50 H52 V42 H22 z"/>
-            <!-- N shape overlay style -->
-            <path d="M38 48 L58 78 L58 48 L72 48 L72 92 L52 92 L32 62 L32 92 L18 92 L18 48 z" opacity="0.95"/>
+          <ellipse class="orbit o1" cx="100" cy="100" rx="88" ry="32" fill="none" stroke="#1ad4ff" stroke-width="3" opacity="0.85"/>
+          <ellipse class="orbit o2" cx="100" cy="100" rx="88" ry="32" fill="none" stroke="#4dc9ff" stroke-width="2" opacity="0.5"/>
+          <g filter="url(#glow)" fill="url(#tnGrad)">
+            <path d="M30 45 h140 v28 H115 v82 H85 V73 H30 Z"/>
+            <path d="M55 78 L95 145 H115 V78 H130 V160 H95 L55 95 V160 H40 V78 Z"/>
           </g>
         </svg>
       </div>
       <div>
         <h1>Тех-нора</h1>
-        <p class="subtitle">Настройки, функции и решения для любых устройств</p>
+        <p class="subtitle">Любая настройка · любой вопрос · рабочий способ</p>
       </div>
     </div>
   </header>
 
-  <div class="search-box">
-    <input type="text" id="searchInput" placeholder="Опиши проблему или что хочешь сделать..." autocomplete="off">
+  <div class="search-wrap glass">
+    <input type="text" id="searchInput" placeholder="Что хочешь сделать? Например: два WhatsApp, передать файл, ускорить телефон..." autocomplete="off">
     <button type="button" id="searchBtn">Найти</button>
   </div>
-  <div class="search-hints">
-    Примеры: два WhatsApp · передать файл с iPhone · включить DeX · автояркость Samsung · sideload · бэкап Xiaomi
-  </div>
+  <div class="search-hints">Попробуй: два аккаунта · DeX · бэкап Samsung · AirDrop на Windows · автояркость · sideload</div>
 
   <div class="filters" id="filters">
     <button type="button" class="filter-btn active" data-platform="all">Все</button>
@@ -64,9 +58,8 @@
   <div id="results-info" class="results-info"></div>
   <main id="content"></main>
 
-  <footer>
-    <p><strong>Тех-нора</strong> — справочник настроек и решений для устройств.<br>
-    Поиск по описанию проблемы, функциям, брендам и программам.</p>
+  <footer class="glass">
+    <strong>Тех-нора</strong> — всегда есть способ. Опиши задачу — получи инструкцию.
   </footer>
 
   <script src="data.js"></script>
