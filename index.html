@@ -5,19 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Тех-нора — настройки и решения для всех устройств</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect rx='20' width='100' height='100' fill='%230a0a0a'/><circle cx='50' cy='50' r='18' fill='none' stroke='%2300d4ff' stroke-width='6'/><circle cx='50' cy='50' r='6' fill='%2300d4ff'/></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23000'/><text x='50' y='68' font-size='42' text-anchor='middle' font-family='Arial Black,sans-serif' font-weight='900' fill='%2300a2ff'>TN</text></svg>">
 </head>
 <body>
   <header>
     <div class="logo-row">
       <div class="logo-mark" aria-label="Тех-нора">
-        <svg class="logo-svg" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle class="ring" cx="32" cy="32" r="22" stroke="currentColor" stroke-width="3.5"/>
-          <circle class="core" cx="32" cy="32" r="8" fill="currentColor"/>
-          <circle class="dot d1" cx="32" cy="10" r="3" fill="currentColor"/>
-          <circle class="dot d2" cx="54" cy="32" r="3" fill="currentColor"/>
-          <circle class="dot d3" cx="32" cy="54" r="3" fill="currentColor"/>
-          <circle class="dot d4" cx="10" cy="32" r="3" fill="currentColor"/>
+        <svg class="logo-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#4dc9ff"/>
+              <stop offset="50%" stop-color="#0088ff"/>
+              <stop offset="100%" stop-color="#0055cc"/>
+            </linearGradient>
+            <filter id="glow">
+              <feGaussianBlur stdDeviation="2.5" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <!-- orbit rings -->
+          <ellipse class="orbit o1" cx="60" cy="60" rx="52" ry="20" fill="none" stroke="#00b4ff" stroke-width="2" opacity="0.7" transform="rotate(-25 60 60)"/>
+          <ellipse class="orbit o2" cx="60" cy="60" rx="52" ry="20" fill="none" stroke="#00d4ff" stroke-width="1.5" opacity="0.45" transform="rotate(35 60 60)"/>
+          <!-- TN monogram simplified -->
+          <g filter="url(#glow)" fill="url(#g)">
+            <!-- T bar -->
+            <path d="M22 28 h76 v14 H68 v50 H52 V42 H22 z"/>
+            <!-- N shape overlay style -->
+            <path d="M38 48 L58 78 L58 48 L72 48 L72 92 L52 92 L32 62 L32 92 L18 92 L18 48 z" opacity="0.95"/>
+          </g>
         </svg>
       </div>
       <div>
@@ -29,21 +44,21 @@
 
   <div class="search-box">
     <input type="text" id="searchInput" placeholder="Опиши проблему или что хочешь сделать..." autocomplete="off">
-    <button onclick="doSearch()">Найти</button>
+    <button type="button" id="searchBtn">Найти</button>
   </div>
   <div class="search-hints">
     Примеры: два WhatsApp · передать файл с iPhone · включить DeX · автояркость Samsung · sideload · бэкап Xiaomi
   </div>
 
-  <div class="filters">
-    <button class="filter-btn active" data-platform="all" onclick="setFilter('all')">Все</button>
-    <button class="filter-btn" data-platform="ios" onclick="setFilter('ios')">iOS</button>
-    <button class="filter-btn" data-platform="android" onclick="setFilter('android')">Android</button>
-    <button class="filter-btn" data-platform="windows" onclick="setFilter('windows')">Windows</button>
-    <button class="filter-btn" data-platform="macos" onclick="setFilter('macos')">macOS</button>
-    <button class="filter-btn" data-platform="cross" onclick="setFilter('cross')">Между устройствами</button>
-    <button class="filter-btn" data-platform="software" onclick="setFilter('software')">Программы</button>
-    <button class="filter-btn" data-platform="brand" onclick="setFilter('brand')">Бренды</button>
+  <div class="filters" id="filters">
+    <button type="button" class="filter-btn active" data-platform="all">Все</button>
+    <button type="button" class="filter-btn" data-platform="ios">iOS</button>
+    <button type="button" class="filter-btn" data-platform="android">Android</button>
+    <button type="button" class="filter-btn" data-platform="windows">Windows</button>
+    <button type="button" class="filter-btn" data-platform="macos">macOS</button>
+    <button type="button" class="filter-btn" data-platform="cross">Между устройствами</button>
+    <button type="button" class="filter-btn" data-platform="software">Программы</button>
+    <button type="button" class="filter-btn" data-platform="brand">Бренды</button>
   </div>
 
   <div id="results-info" class="results-info"></div>
