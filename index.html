@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feature Bridge — Решения для iOS и Android</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Feature Bridge</h1>
+    <p class="subtitle">Практические решения для функций, которых не хватает на iOS и Android.<br>Без воды. Без авторизации. Только рабочие способы.</p>
+  </header>
+
+  <div class="platform-switch">
+    <button id="btn-ios" class="active" onclick="setPlatform('ios')">iOS / iPhone / iPad</button>
+    <button id="btn-android" onclick="setPlatform('android')">Android</button>
+  </div>
+
+  <main id="content">
+    <!-- Content injected by JS -->
+  </main>
+
+  <footer>
+    <p>Сайт не добавляет системные функции в ОС — это невозможно через браузер.<br>
+    Здесь собраны <strong>реальные проверенные обходные пути</strong>, приложения и инструменты.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
