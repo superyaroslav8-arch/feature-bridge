@@ -9,28 +9,31 @@ function normalize(str) {
     .trim();
 }
 
-// Синонимы и расширение запроса для умного поиска
 const synonyms = {
-  'передать': ['отправить', 'перекинуть', 'скинуть', 'share', 'airdrop', 'localsend', 'файл'],
+  'передать': ['отправить', 'перекинуть', 'скинуть', 'share', 'airdrop', 'localsend', 'файл', 'фото'],
   'файл': ['фото', 'видео', 'документ', 'картинка', 'передача'],
-  'два': ['клонирование', 'dual', 'parallel', 'второй', 'аккаунт'],
-  'whatsapp': ['ватсап', 'вацап', 'вотсап'],
+  'два': ['клонирование', 'dual', 'parallel', 'второй', 'аккаунт', 'клон'],
+  'whatsapp': ['ватсап', 'вацап', 'вотсап', 'вацап'],
   'телеграм': ['telegram', 'тг'],
   'split': ['разделённый', 'разделенный', 'два окна', 'многозадачность'],
-  'dex': ['desktop', 'рабочий стол', 'монитор', 'пк режим'],
+  'dex': ['desktop', 'рабочий стол', 'монитор', 'пк режим', 'компьютер'],
   'зарядка': ['заряд', 'powershare', 'обратная', 'беспроводная'],
-  'бэкап': ['backup', 'резерв', 'копия', 'перенос данных'],
-  'sideload': ['ipa', 'вне app store', 'установка приложения', 'altstore'],
+  'бэкап': ['backup', 'резерв', 'копия', 'перенос данных', 'восстановление'],
+  'sideload': ['ipa', 'вне app store', 'установка приложения', 'altstore', 'стороннее'],
   'уведомления': ['notification', 'оповещения'],
-  'яркость': ['автояркость', 'brightness', 'экран'],
+  'яркость': ['автояркость', 'brightness', 'экран', 'адаптивная'],
   'звук': ['громкость', 'volume', 'аудио'],
   'биометрия': ['лицо', 'отпечаток', 'face id', 'fingerprint', 'hello'],
-  'гость': ['гостевой', 'пользователь', 'второй аккаунт устройства']
+  'гость': ['гостевой', 'пользователь', 'второй пользователь'],
+  'samsung': ['самсунг', 'galaxy', 'галактика'],
+  'xiaomi': ['сяоми', 'redmi', 'poco', 'hyperos', 'miui'],
+  'iphone': ['айфон', 'apple', 'эпл'],
+  'настройка': ['настроить', 'включить', 'выключить', 'сделать', 'как']
 };
 
 function expandQuery(query) {
   const q = normalize(query);
-  let words = q.split(' ').filter(Boolean);
+  const words = q.split(' ').filter(Boolean);
   const extra = [];
   words.forEach(w => {
     Object.keys(synonyms).forEach(key => {
@@ -55,9 +58,9 @@ function scoreItem(item, query) {
 
   let score = 0;
   words.forEach(w => {
-    if (title.includes(w)) score += 12;
-    if (tags.includes(w)) score += 9;
-    if (brand.includes(w)) score += 8;
+    if (title.includes(w)) score += 14;
+    if (tags.includes(w)) score += 10;
+    if (brand.includes(w)) score += 9;
     if (desc.includes(w)) score += 5;
     if (solution.includes(w)) score += 2;
   });
@@ -65,14 +68,10 @@ function scoreItem(item, query) {
 }
 
 function getFiltered() {
-  let list = knowledge.slice();
+  let list = (typeof knowledge !== 'undefined' ? knowledge : []).slice();
 
   if (currentFilter !== 'all') {
-    if (currentFilter === 'brand') {
-      list = list.filter(i => i.platform === 'brand');
-    } else {
-      list = list.filter(i => i.platform === currentFilter);
-    }
+    list = list.filter(i => i.platform === currentFilter);
   }
 
   if (currentQuery.trim()) {
@@ -91,8 +90,10 @@ function render() {
   const container = document.getElementById('content');
   const info = document.getElementById('results-info');
 
+  if (!container || !info) return;
+
   if (list.length === 0) {
-    container.innerHTML = '<div class="feature"><p class="desc">Ничего не найдено. Попробуй другими словами: «передать файл», «два аккаунта», «DeX», «автояркость», «sideload», «бэкап Samsung».</p></div>';
+    container.innerHTML = '<div class="feature"><p class="desc">Ничего не найдено. Попробуй: «два WhatsApp», «передать файл», «DeX», «автояркость», «sideload», «бэкап Samsung».</p></div>';
     info.textContent = 'Ничего не найдено';
     return;
   }
@@ -104,17 +105,18 @@ function render() {
   container.innerHTML = list.map(item =>
     '<div class="feature">' +
       '<h2>' + item.title +
-        ' <span class="badge ' + item.status + '">' + item.statusText + '</span>' +
+        ' <span class="badge ' + (item.status || 'possible') + '">' + (item.statusText || '') + '</span>' +
         ' <span class="badge platform">' + (item.platform || '').toUpperCase() + '</span>' +
       '</h2>' +
-      '<p class="desc">' + item.desc + '</p>' +
-      '<div class="solution">' + item.solution + '</div>' +
+      '<p class="desc">' + (item.desc || '') + '</p>' +
+      '<div class="solution">' + (item.solution || '') + '</div>' +
     '</div>'
   ).join('');
 }
 
 function doSearch() {
-  currentQuery = document.getElementById('searchInput').value;
+  const input = document.getElementById('searchInput');
+  if (input) currentQuery = input.value;
   render();
 }
 
@@ -126,16 +128,18 @@ function setFilter(platform) {
   render();
 }
 
-document.getElementById('searchInput').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') doSearch();
-});
-
-document.getElementById('searchInput').addEventListener('input', function() {
-  clearTimeout(window._searchTimer);
-  window._searchTimer = setTimeout(function() {
-    currentQuery = document.getElementById('searchInput').value;
-    render();
-  }, 180);
-});
+const input = document.getElementById('searchInput');
+if (input) {
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') doSearch();
+  });
+  input.addEventListener('input', function() {
+    clearTimeout(window._searchTimer);
+    window._searchTimer = setTimeout(function() {
+      currentQuery = input.value;
+      render();
+    }, 160);
+  });
+}
 
 render();
