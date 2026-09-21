@@ -9,34 +9,70 @@ function normalize(str) {
     .trim();
 }
 
+// Синонимы и расширение запроса для умного поиска
+const synonyms = {
+  'передать': ['отправить', 'перекинуть', 'скинуть', 'share', 'airdrop', 'localsend', 'файл'],
+  'файл': ['фото', 'видео', 'документ', 'картинка', 'передача'],
+  'два': ['клонирование', 'dual', 'parallel', 'второй', 'аккаунт'],
+  'whatsapp': ['ватсап', 'вацап', 'вотсап'],
+  'телеграм': ['telegram', 'тг'],
+  'split': ['разделённый', 'разделенный', 'два окна', 'многозадачность'],
+  'dex': ['desktop', 'рабочий стол', 'монитор', 'пк режим'],
+  'зарядка': ['заряд', 'powershare', 'обратная', 'беспроводная'],
+  'бэкап': ['backup', 'резерв', 'копия', 'перенос данных'],
+  'sideload': ['ipa', 'вне app store', 'установка приложения', 'altstore'],
+  'уведомления': ['notification', 'оповещения'],
+  'яркость': ['автояркость', 'brightness', 'экран'],
+  'звук': ['громкость', 'volume', 'аудио'],
+  'биометрия': ['лицо', 'отпечаток', 'face id', 'fingerprint', 'hello'],
+  'гость': ['гостевой', 'пользователь', 'второй аккаунт устройства']
+};
+
+function expandQuery(query) {
+  const q = normalize(query);
+  let words = q.split(' ').filter(Boolean);
+  const extra = [];
+  words.forEach(w => {
+    Object.keys(synonyms).forEach(key => {
+      if (w.includes(key) || key.includes(w)) {
+        synonyms[key].forEach(s => extra.push(s));
+      }
+    });
+  });
+  return [...new Set([...words, ...extra])];
+}
+
 function scoreItem(item, query) {
   if (!query) return 1;
-  const q = normalize(query);
-  const words = q.split(' ').filter(Boolean);
-  if (!words.length) return 1;
+  const words = expandQuery(query);
+  if (words.length === 0) return 1;
 
   const title = normalize(item.title);
   const desc = normalize(item.desc);
   const tags = (item.tags || []).map(normalize).join(' ');
   const solution = normalize((item.solution || '').replace(/<[^>]+>/g, ' '));
+  const brand = normalize(item.brand || '');
 
   let score = 0;
   words.forEach(w => {
     if (title.includes(w)) score += 12;
     if (tags.includes(w)) score += 9;
+    if (brand.includes(w)) score += 8;
     if (desc.includes(w)) score += 5;
     if (solution.includes(w)) score += 2;
-    // бонус за точное начало
-    if (title.startsWith(w) || tags.split(' ').some(t => t.startsWith(w))) score += 3;
   });
   return score;
 }
 
 function getFiltered() {
-  let list = (typeof knowledge !== 'undefined' ? knowledge : []).slice();
+  let list = knowledge.slice();
 
   if (currentFilter !== 'all') {
-    list = list.filter(i => i.platform === currentFilter);
+    if (currentFilter === 'brand') {
+      list = list.filter(i => i.platform === 'brand');
+    } else {
+      list = list.filter(i => i.platform === currentFilter);
+    }
   }
 
   if (currentQuery.trim()) {
@@ -46,6 +82,7 @@ function getFiltered() {
       .sort((a, b) => b.score - a.score)
       .map(x => x.item);
   }
+
   return list;
 }
 
@@ -54,25 +91,25 @@ function render() {
   const container = document.getElementById('content');
   const info = document.getElementById('results-info');
 
-  if (!list.length) {
-    container.innerHTML = '<div class="feature"><p class="desc">Ничего не найдено. Попробуй: «передать файл», «два аккаунта», «DeX», «split screen», «бэкап», «sideload», «LocalSend».</p></div>';
+  if (list.length === 0) {
+    container.innerHTML = '<div class="feature"><p class="desc">Ничего не найдено. Попробуй другими словами: «передать файл», «два аккаунта», «DeX», «автояркость», «sideload», «бэкап Samsung».</p></div>';
     info.textContent = 'Ничего не найдено';
     return;
   }
 
   info.textContent = currentQuery.trim()
     ? 'Найдено: ' + list.length + ' · «' + currentQuery + '»'
-    : 'Показано: ' + list.length + ' решений';
+    : 'Показано: ' + list.length;
 
   container.innerHTML = list.map(item =>
-    '<article class="feature">' +
+    '<div class="feature">' +
       '<h2>' + item.title +
         ' <span class="badge ' + item.status + '">' + item.statusText + '</span>' +
         ' <span class="badge platform">' + (item.platform || '').toUpperCase() + '</span>' +
       '</h2>' +
       '<p class="desc">' + item.desc + '</p>' +
       '<div class="solution">' + item.solution + '</div>' +
-    '</article>'
+    '</div>'
   ).join('');
 }
 
@@ -89,12 +126,14 @@ function setFilter(platform) {
   render();
 }
 
-const input = document.getElementById('searchInput');
-input.addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
-input.addEventListener('input', () => {
+document.getElementById('searchInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') doSearch();
+});
+
+document.getElementById('searchInput').addEventListener('input', function() {
   clearTimeout(window._searchTimer);
-  window._searchTimer = setTimeout(() => {
-    currentQuery = input.value;
+  window._searchTimer = setTimeout(function() {
+    currentQuery = document.getElementById('searchInput').value;
     render();
   }, 180);
 });
