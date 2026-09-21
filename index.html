@@ -3,18 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Feature Bridge — Настройки, функции и решения для всех устройств</title>
+  <title>Fixly — как настроить любое устройство</title>
+  <meta name="description" content="Умный справочник: введи проблему — получи точную инструкцию для iPhone, Android, Windows, Mac и программ.">
   <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect rx='22' width='100' height='100' fill='%230ea5e9'/><text x='50' y='68' font-size='58' text-anchor='middle' fill='white' font-family='system-ui' font-weight='700'>F</text></svg>">
 </head>
 <body>
   <header>
-    <h1>Feature Bridge</h1>
-    <p class="subtitle">База решений для устройств, программ и настроек.<br>Введи проблему или что хочешь сделать — получи точную инструкцию.</p>
+    <div class="logo-row">
+      <div class="logo-mark">F</div>
+      <div>
+        <h1>Fixly</h1>
+        <p class="tagline">Как настроить любое устройство</p>
+      </div>
+    </div>
+    <p class="subtitle">Введи проблему или что хочешь сделать — получи готовую инструкцию</p>
   </header>
 
   <div class="search-box">
-    <input type="text" id="searchInput" placeholder="Например: как передать файл с iPhone на Windows, включить split screen, настроить DeX, два WhatsApp..." autocomplete="off">
-    <button onclick="doSearch()">Найти</button>
+    <input type="text" id="searchInput" placeholder="Например: передать файл с iPhone на Windows, два WhatsApp, DeX, split screen, бэкап..." autocomplete="off" autofocus>
+    <button id="searchBtn" onclick="doSearch()">Найти</button>
   </div>
 
   <div class="filters" id="filters">
@@ -31,8 +39,8 @@
   <main id="content"></main>
 
   <footer>
-    <p>Это справочник с проверенными инструкциями. Настоящий ИИ-поиск по всем устройствам мира требует сервера.<br>
-    Здесь собрана большая база самых частых и полезных решений. Просто введи запрос.</p>
+    <p><strong>Fixly</strong> — справочник с умным поиском по проверенным инструкциям.<br>
+    Настоящий генеративный ИИ требует сервер и ключ API. Здесь — быстрый и точный поиск по большой базе решений.</p>
   </footer>
 
   <script src="data.js"></script>

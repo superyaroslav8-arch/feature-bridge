@@ -13,25 +13,27 @@ function scoreItem(item, query) {
   if (!query) return 1;
   const q = normalize(query);
   const words = q.split(' ').filter(Boolean);
-  if (words.length === 0) return 1;
+  if (!words.length) return 1;
 
   const title = normalize(item.title);
   const desc = normalize(item.desc);
   const tags = (item.tags || []).map(normalize).join(' ');
-  const solution = normalize(item.solution.replace(/<[^>]+>/g, ' '));
+  const solution = normalize((item.solution || '').replace(/<[^>]+>/g, ' '));
 
   let score = 0;
   words.forEach(w => {
-    if (title.includes(w)) score += 10;
-    if (tags.includes(w)) score += 8;
-    if (desc.includes(w)) score += 4;
+    if (title.includes(w)) score += 12;
+    if (tags.includes(w)) score += 9;
+    if (desc.includes(w)) score += 5;
     if (solution.includes(w)) score += 2;
+    // бонус за точное начало
+    if (title.startsWith(w) || tags.split(' ').some(t => t.startsWith(w))) score += 3;
   });
   return score;
 }
 
 function getFiltered() {
-  let list = knowledge.slice();
+  let list = (typeof knowledge !== 'undefined' ? knowledge : []).slice();
 
   if (currentFilter !== 'all') {
     list = list.filter(i => i.platform === currentFilter);
@@ -44,7 +46,6 @@ function getFiltered() {
       .sort((a, b) => b.score - a.score)
       .map(x => x.item);
   }
-
   return list;
 }
 
@@ -53,25 +54,25 @@ function render() {
   const container = document.getElementById('content');
   const info = document.getElementById('results-info');
 
-  if (list.length === 0) {
-    container.innerHTML = '<div class="feature"><p class="desc">Ничего не найдено. Попробуй другие слова: «передать файл», «два аккаунта», «split screen», «DeX», «бэкап», «sideload» и т.д.</p></div>';
+  if (!list.length) {
+    container.innerHTML = '<div class="feature"><p class="desc">Ничего не найдено. Попробуй: «передать файл», «два аккаунта», «DeX», «split screen», «бэкап», «sideload», «LocalSend».</p></div>';
     info.textContent = 'Ничего не найдено';
     return;
   }
 
   info.textContent = currentQuery.trim()
-    ? 'Найдено: ' + list.length + ' по запросу «' + currentQuery + '»'
-    : 'Показано: ' + list.length;
+    ? 'Найдено: ' + list.length + ' · «' + currentQuery + '»'
+    : 'Показано: ' + list.length + ' решений';
 
   container.innerHTML = list.map(item =>
-    '<div class="feature">' +
+    '<article class="feature">' +
       '<h2>' + item.title +
         ' <span class="badge ' + item.status + '">' + item.statusText + '</span>' +
-        ' <span class="badge platform">' + item.platform.toUpperCase() + '</span>' +
+        ' <span class="badge platform">' + (item.platform || '').toUpperCase() + '</span>' +
       '</h2>' +
       '<p class="desc">' + item.desc + '</p>' +
       '<div class="solution">' + item.solution + '</div>' +
-    '</div>'
+    '</article>'
   ).join('');
 }
 
@@ -88,17 +89,14 @@ function setFilter(platform) {
   render();
 }
 
-document.getElementById('searchInput').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') doSearch();
-});
-
-document.getElementById('searchInput').addEventListener('input', function() {
+const input = document.getElementById('searchInput');
+input.addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
+input.addEventListener('input', () => {
   clearTimeout(window._searchTimer);
-  window._searchTimer = setTimeout(function() {
-    currentQuery = document.getElementById('searchInput').value;
+  window._searchTimer = setTimeout(() => {
+    currentQuery = input.value;
     render();
-  }, 200);
+  }, 180);
 });
 
-// Старт
 render();
