@@ -3,18 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Feature Bridge — Решения для iOS и Android</title>
+  <title>Feature Bridge — Решения для iOS, Android, Windows</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header>
     <h1>Feature Bridge</h1>
-    <p class="subtitle">Практические решения для функций, которых не хватает на iOS и Android.<br>Без воды. Без авторизации. Только рабочие способы.</p>
+    <p class="subtitle">Практические решения для недостающих функций на iOS, Android, Windows и между устройствами.<br>Без воды. Без авторизации. Только рабочие способы.</p>
   </header>
 
   <div class="platform-switch">
-    <button id="btn-ios" class="active" onclick="setPlatform('ios')">iOS / iPhone / iPad</button>
+    <button id="btn-ios" class="active" onclick="setPlatform('ios')">iOS</button>
     <button id="btn-android" onclick="setPlatform('android')">Android</button>
+    <button id="btn-windows" onclick="setPlatform('windows')">Windows</button>
+    <button id="btn-cross" onclick="setPlatform('cross')">Между устройствами</button>
   </div>
 
   <main id="content">
