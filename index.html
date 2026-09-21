@@ -3,31 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Feature Bridge — Решения для iOS, Android, Windows</title>
+  <title>Feature Bridge — Настройки, функции и решения для всех устройств</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header>
     <h1>Feature Bridge</h1>
-    <p class="subtitle">Практические решения для недостающих функций на iOS, Android, Windows и между устройствами.<br>Без воды. Без авторизации. Только рабочие способы.</p>
+    <p class="subtitle">База решений для устройств, программ и настроек.<br>Введи проблему или что хочешь сделать — получи точную инструкцию.</p>
   </header>
 
-  <div class="platform-switch">
-    <button id="btn-ios" class="active" onclick="setPlatform('ios')">iOS</button>
-    <button id="btn-android" onclick="setPlatform('android')">Android</button>
-    <button id="btn-windows" onclick="setPlatform('windows')">Windows</button>
-    <button id="btn-cross" onclick="setPlatform('cross')">Между устройствами</button>
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="Например: как передать файл с iPhone на Windows, включить split screen, настроить DeX, два WhatsApp..." autocomplete="off">
+    <button onclick="doSearch()">Найти</button>
   </div>
 
-  <main id="content">
-    <!-- Content injected by JS -->
-  </main>
+  <div class="filters" id="filters">
+    <button class="filter-btn active" data-platform="all" onclick="setFilter('all')">Все</button>
+    <button class="filter-btn" data-platform="ios" onclick="setFilter('ios')">iOS</button>
+    <button class="filter-btn" data-platform="android" onclick="setFilter('android')">Android</button>
+    <button class="filter-btn" data-platform="windows" onclick="setFilter('windows')">Windows</button>
+    <button class="filter-btn" data-platform="macos" onclick="setFilter('macos')">macOS</button>
+    <button class="filter-btn" data-platform="cross" onclick="setFilter('cross')">Между устройствами</button>
+    <button class="filter-btn" data-platform="software" onclick="setFilter('software')">Программы</button>
+  </div>
+
+  <div id="results-info" class="results-info"></div>
+  <main id="content"></main>
 
   <footer>
-    <p>Сайт не добавляет системные функции в ОС — это невозможно через браузер.<br>
-    Здесь собраны <strong>реальные проверенные обходные пути</strong>, приложения и инструменты.</p>
+    <p>Это справочник с проверенными инструкциями. Настоящий ИИ-поиск по всем устройствам мира требует сервера.<br>
+    Здесь собрана большая база самых частых и полезных решений. Просто введи запрос.</p>
   </footer>
 
+  <script src="data.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
